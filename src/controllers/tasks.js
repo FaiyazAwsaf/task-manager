@@ -1,6 +1,14 @@
-const getAllTasks =  (req, res) => {
-    res.send("All Items");
-}
+const db = require('../db'); 
+
+
+const getAllTasks =  async (req, res) => {
+    try {
+        const [tasks] = await db.query('SELECT * FROM tasks');
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 const createTask = (req, res) => {
     res.send("A new task is added");
