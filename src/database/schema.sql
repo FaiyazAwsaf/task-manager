@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
     status ENUM('pending', 'in-progress', 'completed') NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    due_date DATE
+    due_date DATE NULL
 );
