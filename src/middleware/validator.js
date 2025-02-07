@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator');
 
 const validateTask = [
-    check('title').notEmpty().withMessage('Title is required'),
+    check('title').notEmpty().withMessage('Title is required').trim().escape(),
     check('status').isIn(['pending', 'in-progress', 'completed']).withMessage('Invalid status'),
     (req, res, next) => {
         const errors = validationResult(req);

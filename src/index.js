@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const tasks = require('./routes/tasks.js');
+const logger = require('./middleware/logger.js');
+
 
 //middleware
 app.use(express.json());
+app.use(logger);
 
 //routes
 app.get('/home', (req, res) => {
