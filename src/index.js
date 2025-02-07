@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const tasks = require('./routes/tasks.js');
+const auth = require('./routes/auth.js')
 const logger = require('./middleware/logger.js');
 
 
@@ -9,10 +10,7 @@ app.use(express.json());
 app.use(logger);
 
 //routes
-app.get('/home', (req, res) => {
-    res.send("Task Manager App");
-})
-
+app.use('/api/v1/auth', auth);
 app.use('/api/v1/tasks', tasks);
 
 
