@@ -1,5 +1,7 @@
 const db = require('../db');
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const registerUser = async(req, res) => {
     const {username, password} = req.body;
@@ -23,4 +25,48 @@ const registerUser = async(req, res) => {
     }
 }
 
-module.exports = { registerUser };
+
+const userLogin = async(req, res) => {
+    const {username, password} = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: "Username and password are required" });
+    }
+
+    try {    
+    
+    const getUserQuery = "SELECT * FROM users WHERE username = ?";
+    const values = [username];
+
+    const [users] = await db.query(getUserQuery,values);
+
+    if (users.length === 0) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+    
+    const user = users[0];
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+    
+    const token = jwt.sign(
+        {
+            id: user.id,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        {expiresIn: '5m'}
+    )
+    
+    res.json({ token });
+        
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
+
+}
+
+module.exports = { registerUser, userLogin };

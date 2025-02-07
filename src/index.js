@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const tasks = require('./routes/tasks.js');
-const auth = require('./routes/auth.js')
+const auth = require('./routes/auth.js');
 const logger = require('./middleware/logger.js');
 
 
