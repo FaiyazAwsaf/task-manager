@@ -10,6 +10,14 @@ const registerUser = async(req, res) => {
         return res.status(400).json({error: "Username and Password are required"});
     }
     
+    //check if user already exists
+    const checkUserQuery = "SELECT * FROM users WHERE username = ?";
+    const values = [username];
+    if (await db.query(checkUserQuery, values)) {
+        return res.status(409).json({error: "User already exists"});
+    }
+
+    //create new user
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -52,12 +60,9 @@ const userLogin = async(req, res) => {
     }
     
     const token = jwt.sign(
-        {
-            id: user.id,
-            username: user.username
-        },
+        { id: user.id },
         process.env.JWT_SECRET,
-        {expiresIn: '5m'}
+        { expiresIn: '5m' }
     )
     
     res.json({ token });
